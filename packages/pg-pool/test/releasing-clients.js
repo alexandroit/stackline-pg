@@ -1,6 +1,7 @@
 const Pool = require('../')
 
-const expect = require('expect.js')
+const expect = require('./support/expect')
+const { describe, it } = require('./support/harness')
 
 describe('releasing clients', () => {
   it('removes a client which cannot be queried', async () => {

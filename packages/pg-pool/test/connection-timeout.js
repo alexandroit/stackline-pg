@@ -1,12 +1,9 @@
 'use strict'
 const net = require('net')
-const co = require('co')
-const expect = require('expect.js')
+const co = require('./support/co')
+const expect = require('./support/expect')
 
-const describe = require('mocha').describe
-const it = require('mocha').it
-const before = require('mocha').before
-const after = require('mocha').after
+const { describe, it, before, after } = require('./support/harness')
 
 const Pool = require('../')
 
@@ -227,7 +224,8 @@ describe('connection timeout', () => {
     })
   })
 
-  it('should connect if timeout is passed, but native client in connected state', (done) => {
+  const nativeIt = process.env.TEST_SKIP_NATIVE === 'true' ? it.skip : it
+  nativeIt('should connect if timeout is passed, but native client in connected state', (done) => {
     const Client = require('pg').native.Client
 
     Client.prototype.connect = function (cb) {

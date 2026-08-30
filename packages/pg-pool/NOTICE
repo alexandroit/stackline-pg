@@ -1,0 +1,9 @@
+@stackline/pg-pool is an independent fork of pg-pool from node-postgres.
+
+Upstream project: https://github.com/brianc/node-postgres
+Reviewed compatibility baseline: pg-pool 3.14.0
+Upstream copyright: Brian M. Carlson
+License: MIT
+
+The original MIT license and copyright notice are preserved in LICENSE.
+Stackline modifications and documentation are maintained independently.

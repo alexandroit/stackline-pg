@@ -1,10 +1,9 @@
 'use strict'
 const net = require('net')
-const co = require('co')
-const expect = require('expect.js')
+const co = require('./support/co')
+const expect = require('./support/expect')
 
-const describe = require('mocha').describe
-const it = require('mocha').it
+const { describe, it } = require('./support/harness')
 
 const Pool = require('../')
 

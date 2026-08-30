@@ -1,13 +1,59 @@
-# pg-pool
+# @stackline/pg-pool
 
-[![Build Status](https://travis-ci.org/brianc/node-pg-pool.svg?branch=master)](https://travis-ci.org/brianc/node-pg-pool)
+A maintained, dependency-clean build of `pg-pool`, compatible with the
+`pg-pool@3.14.0` public API.
 
-A connection pool for node-postgres
+This package is part of the Stackline PostgreSQL compatibility chain. It keeps
+the historical `pg` peer available for standalone users but marks it optional,
+so npm does not silently install the old `pg -> pg-types -> xtend` production
+graph. `@stackline/pg` injects its Client constructor directly and therefore
+does not need that peer at runtime.
 
-## install
+This is an independent fork of the MIT-licensed `brianc/node-postgres`
+project. It is not affiliated with or endorsed by the upstream maintainers.
+
+## Install
+
+Direct scoped import:
 
 ```sh
-npm i pg-pool pg
+npm install @stackline/pg-pool
+```
+
+```js
+const Pool = require('@stackline/pg-pool')
+```
+
+Drop-in package-name alias:
+
+```sh
+npm install pg-pool@npm:@stackline/pg-pool
+```
+
+Existing `require('pg-pool')` and ESM default imports then remain unchanged.
+When using the pool by itself, install a compatible PostgreSQL Client or pass a
+Client constructor explicitly. `@stackline/pg` does this automatically.
+
+## Security Properties
+
+- No production dependencies.
+- The `pg` peer is optional and is not auto-installed.
+- Clean packed installs are tested under both scoped and legacy alias names.
+- The complete default production graph must pass `npm ls --all` and
+  `npm audit --omit=dev` with zero findings.
+
+See [DEPENDENCY_REVIEW.md](DEPENDENCY_REVIEW.md),
+[COMPATIBILITY.md](COMPATIBILITY.md), and [SECURITY.md](SECURITY.md).
+
+## API Guide
+
+A connection pool for node-postgres. The examples below use the legacy alias
+installation, so the original `require('pg-pool')` calls are preserved.
+
+### Legacy alias install
+
+```sh
+npm install pg-pool@npm:@stackline/pg-pool pg
 ```
 
 ## use

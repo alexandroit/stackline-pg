@@ -1,6 +1,5 @@
-const describe = require('mocha').describe
-const it = require('mocha').it
-const expect = require('expect.js')
+const { describe, it } = require('./support/harness')
+const expect = require('./support/expect')
 
 const Pool = require('..')
 

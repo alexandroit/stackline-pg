@@ -1,9 +1,8 @@
 'use strict'
-const expect = require('expect.js')
-const _ = require('lodash')
+const expect = require('./support/expect')
+const _ = require('./support/lodash')
 
-const describe = require('mocha').describe
-const it = require('mocha').it
+const { describe, it } = require('./support/harness')
 
 const Pool = require('../')
 

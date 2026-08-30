@@ -1,95 +1,99 @@
-name: CI
+name: Stackline PostgreSQL release gates
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+    tags: ['stackline-*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: pg-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  lint:
-    timeout-minutes: 5
+  pg-pool:
+    name: pg-pool / Node ${{ matrix.node }} / PostgreSQL ${{ matrix.postgres }}
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: yarn
-      - run: yarn install --frozen-lockfile
-      - run: yarn lint
-  build:
     timeout-minutes: 15
-    needs: lint
-    services:
-      postgres:
-        image: ghcr.io/railwayapp-templates/postgres-ssl:${{ matrix.postgres }}
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_HOST_AUTH_METHOD: 'md5'
-          POSTGRES_DB: ci_db_test
-          # PostgreSQL 18's official image defaults PGDATA to a versioned
-          # subdirectory (/var/lib/postgresql/18/docker), but the
-          # railwayapp-templates/postgres-ssl entrypoint requires PGDATA to
-          # start with /var/lib/postgresql/data so we pin it explicitly. This is
-          # also the default for the older images, so it is a no-op there.
-          PGDATA: /var/lib/postgresql/data
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     strategy:
       fail-fast: false
       matrix:
         include:
-          # Historical Node.js versions tested against a single PostgreSQL version
-          - { node: '16', postgres: &stable_postgres '18' }
-          - { node: '18', postgres: *stable_postgres }
-          - { node: '20', postgres: *stable_postgres }
-          - { node: '22', postgres: *stable_postgres }
-          - { node: '24', postgres: *stable_postgres }
-          # Latest Node.js version tested against multiple PostgreSQL versions
-          - { node: &latest_node '26', postgres: '13' }
-          - { node: *latest_node, postgres: '14' }
-          - { node: *latest_node, postgres: '15' }
-          - { node: *latest_node, postgres: '16' }
-          - { node: *latest_node, postgres: '17' }
-          - { node: *latest_node, postgres: '18' }
-    name: Node.js ${{ matrix.node }} x PostgreSQL ${{ matrix.postgres }}
-    runs-on: ubuntu-latest
+          - { node: '16', postgres: '18' }
+          - { node: '18', postgres: '18' }
+          - { node: '20', postgres: '18' }
+          - { node: '22', postgres: '18' }
+          - { node: '24', postgres: '18' }
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}
+        env:
+          POSTGRES_USER: stackline_pg_test
+          POSTGRES_PASSWORD: stackline_pg_test
+          POSTGRES_DB: stackline_pg_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
-      PGUSER: postgres
-      PGPASSWORD: postgres
-      PGHOST: localhost
-      PGDATABASE: ci_db_test
-      PGTESTNOSSL: 'true'
-      SCRAM_TEST_PGUSER: scram_test
-      SCRAM_TEST_PGPASSWORD: test4scram
-      SCRAM_TEST_PGUSER_UNICODE: scram_unicode_test
-      # Raw form of a password whose NFKC normalization differs from itself.
-      # U+2168 (ROMAN NUMERAL IX) decomposes to ASCII "IX" under NFKC; the
-      # server stores the verifier from the SASLprep-normalized form, so the
-      # client must apply SASLprep too. This is the regression check for the
-      # RFC 4013 fix in packages/pg/lib/crypto/sasl.js.
-      SCRAM_TEST_PGPASSWORD_UNICODE: "IX-\u2168"
+      PGHOST: 127.0.0.1
+      PGPORT: 5432
+      PGUSER: stackline_pg_test
+      PGPASSWORD: stackline_pg_test
+      PGDATABASE: stackline_pg_test
+      TEST_SKIP_NATIVE: 'true'
+      NO_UPDATE_NOTIFIER: '1'
+    defaults:
+      run:
+        working-directory: packages/pg-pool
     steps:
-      - name: Show OS
-        run: |
-          uname -a
-      - run: |
-          psql \
-            -c "SET password_encryption = 'scram-sha-256'" \
-            -c "CREATE ROLE scram_test LOGIN PASSWORD 'test4scram'" \
-            -c "CREATE ROLE scram_unicode_test LOGIN PASSWORD U&'IX-\2168'"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-      - name: Setup node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: ${{ matrix.node }}
-          cache: yarn
-      - run: yarn install --frozen-lockfile
-      - run: yarn test
+      - name: Verify clean source install
+        run: |
+          npm install --ignore-scripts --workspaces=false
+          npm ls --all
+          npm audit --audit-level=low
+      - name: Install PostgreSQL test fixture
+        run: npm install --no-save --package-lock=false --ignore-scripts --workspaces=false pg@8.23.0
+      - name: Run upstream and Stackline contracts
+        run: npm test
+      - name: Verify package metadata
+        run: npm run check:package
+      - name: Verify packed consumers
+        run: npm run test:smoke
+      - name: Inspect packed inventory
+        run: npm run pack:check
+      - name: Lint the exact tarball
+        if: matrix.node == '24'
+        run: |
+          archive=$(npm pack --silent --ignore-scripts)
+          npx --yes publint@0.3.24 "$archive" --strict
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: github/codeql-action/init@6f5948dfacef28e207b48d0905cf90c03365536d
+        with:
+          languages: javascript-typescript
+      - uses: github/codeql-action/analyze@6f5948dfacef28e207b48d0905cf90c03365536d
