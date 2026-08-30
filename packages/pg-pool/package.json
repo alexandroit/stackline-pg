@@ -26,8 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexandroit/stackline-pg.git",
-    "directory": "packages/pg-pool"
+    "url": "git+https://github.com/alexandroit/stackline-pg-pool.git"
   },
   "keywords": [
     "pg",
@@ -44,7 +43,7 @@
     "node": ">=16"
   },
   "bugs": {
-    "url": "https://github.com/alexandroit/stackline-pg/issues"
+    "url": "https://github.com/alexandroit/stackline-pg-pool/issues"
   },
   "homepage": "https://alexandro.net/docs/vanilla/pg-pool/",
   "peerDependencies": {

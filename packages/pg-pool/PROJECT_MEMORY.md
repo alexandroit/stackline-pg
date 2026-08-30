@@ -4,7 +4,7 @@
 
 - Package: `@stackline/pg-pool`
 - Compatibility baseline: `pg-pool@3.14.0`
-- Repository: `alexandroit/stackline-pg`, directory `packages/pg-pool`
+- Repository: `alexandroit/stackline-pg-pool`
 - License: MIT, with upstream attribution preserved
 
 ## Permanent Decisions

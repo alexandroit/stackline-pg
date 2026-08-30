@@ -10,7 +10,7 @@
 ## Reporting
 
 Do not disclose a suspected vulnerability in a public issue. Use GitHub's
-private vulnerability reporting for `alexandroit/stackline-pg`.
+private vulnerability reporting for `alexandroit/stackline-pg-pool`.
 
 Include the affected version, runtime, a minimal reproduction, expected and
 observed behavior, and the security impact. Maintainers will acknowledge a

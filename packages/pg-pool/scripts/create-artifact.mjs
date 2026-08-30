@@ -15,7 +15,6 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
-const repository = path.resolve(root, '../..')
 const destination = path.join(root, 'release-candidate')
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 
@@ -27,6 +26,8 @@ function command(executable, arguments_, cwd = root) {
     stdio: ['ignore', 'pipe', 'pipe']
   }).trim()
 }
+
+const repository = command('git', ['rev-parse', '--show-toplevel'])
 
 function digest(algorithm, bytes, encoding = 'hex') {
   return createHash(algorithm).update(bytes).digest(encoding)
