@@ -51,34 +51,41 @@ jobs:
       PGDATABASE: stackline_pg_test
       TEST_SKIP_NATIVE: 'true'
       NO_UPDATE_NOTIFIER: '1'
+      PACKAGE_DIR: /tmp/pg-pool-source
     defaults:
       run:
         working-directory: packages/pg-pool
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: ${{ matrix.node }}
+      - name: Prepare isolated package source
+        run: cp -a . "$PACKAGE_DIR"
       - name: Verify clean source install
         run: |
+          cd "$PACKAGE_DIR"
           npm install --ignore-scripts --workspaces=false
           npm ls --all
           npm audit --audit-level=low
       - name: Install PostgreSQL test fixture
-        run: npm install --no-save --package-lock=false --ignore-scripts --workspaces=false pg@8.23.0
+        run: |
+          cd "$PACKAGE_DIR"
+          npm install --no-save --package-lock=false --ignore-scripts pg@8.23.0
       - name: Run upstream and Stackline contracts
-        run: npm test
+        run: cd "$PACKAGE_DIR" && npm test
       - name: Verify package metadata
-        run: npm run check:package
+        run: cd "$PACKAGE_DIR" && npm run check:package
       - name: Verify packed consumers
-        run: npm run test:smoke
+        run: cd "$PACKAGE_DIR" && npm run test:smoke
       - name: Inspect packed inventory
-        run: npm run pack:check
+        run: cd "$PACKAGE_DIR" && npm run pack:check
       - name: Lint the exact tarball
         if: matrix.node == '24'
         run: |
+          cd "$PACKAGE_DIR"
           archive=$(npm pack --silent --ignore-scripts)
           npx --yes publint@0.3.24 "$archive" --strict
 
@@ -90,10 +97,10 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           persist-credentials: false
-      - uses: github/codeql-action/init@6f5948dfacef28e207b48d0905cf90c03365536d
+      - uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938
         with:
           languages: javascript-typescript
-      - uses: github/codeql-action/analyze@6f5948dfacef28e207b48d0905cf90c03365536d
+      - uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938
