@@ -1,0 +1,11 @@
+@stackline/pg is an independent fork of pg from node-postgres.
+
+Upstream project: https://github.com/brianc/node-postgres
+Reviewed compatibility baseline: pg 8.23.0
+Upstream source commit: c9e57617bc92c2ded23a75345f50eadc527bd131
+Upstream copyright: Brian M. Carlson
+License: MIT
+
+The original MIT license and copyright notice are preserved in LICENSE.
+Stackline dependency hardening, release engineering, tests, and documentation
+are maintained independently.

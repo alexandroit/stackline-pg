@@ -1,4 +1,19 @@
-All major and minor releases are briefly explained below.
+# Changelog
+
+## @stackline/pg 1.0.0 - 2026-08-30
+
+- Preserves the public runtime API and implementation of `pg@8.23.0`.
+- Replaces the archived `pg-types -> postgres-interval -> xtend` branch with
+  exact, dependency-free Stackline forks.
+- Updates `pgpass` to its dependency-free maintained release.
+- Pins the complete production graph for reproducible installs.
+- Adds clean-install, full-tree, zero-audit, CommonJS, ESM, PostgreSQL, SBOM,
+  provenance, and artifact-integrity release gates.
+- Modernizes the test harness without changing runtime behavior.
+
+## Upstream History
+
+All major and minor upstream releases are briefly explained below.
 
 For richer information consult the commit log on github with referenced pull requests.
 

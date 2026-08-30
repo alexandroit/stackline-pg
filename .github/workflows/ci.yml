@@ -1,9 +1,9 @@
-name: Stackline PostgreSQL release gates
+name: Release gates
 
 on:
   push:
     branches: [main]
-    tags: ['stackline-*']
+    tags: ['stackline-v*']
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -16,10 +16,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  pg-pool:
-    name: pg-pool / Node ${{ matrix.node }} / PostgreSQL ${{ matrix.postgres }}
+  test:
+    name: Node ${{ matrix.node }} / PostgreSQL ${{ matrix.postgres }}
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -29,13 +29,17 @@ jobs:
           - { node: '20', postgres: '18' }
           - { node: '22', postgres: '18' }
           - { node: '24', postgres: '18' }
+          - { node: '26', postgres: '18' }
+          - { node: '26', postgres: '13' }
     services:
       postgres:
-        image: postgres:${{ matrix.postgres }}
+        image: ghcr.io/railwayapp-templates/postgres-ssl:${{ matrix.postgres }}
         env:
           POSTGRES_USER: stackline_pg_test
           POSTGRES_PASSWORD: stackline_pg_test
           POSTGRES_DB: stackline_pg_test
+          POSTGRES_HOST_AUTH_METHOD: md5
+          PGDATA: /var/lib/postgresql/data
         ports:
           - 5432:5432
         options: >-
@@ -49,12 +53,9 @@ jobs:
       PGUSER: stackline_pg_test
       PGPASSWORD: stackline_pg_test
       PGDATABASE: stackline_pg_test
+      PGTESTNOSSL: 'true'
       TEST_SKIP_NATIVE: 'true'
       NO_UPDATE_NOTIFIER: '1'
-      PACKAGE_DIR: /tmp/pg-pool-source
-    defaults:
-      run:
-        working-directory: packages/pg-pool
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
@@ -62,30 +63,30 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: ${{ matrix.node }}
-      - name: Prepare isolated package source
-        run: cp -a . "$PACKAGE_DIR"
+          cache: npm
       - name: Verify clean source install
+        shell: bash
         run: |
-          cd "$PACKAGE_DIR"
-          npm install --ignore-scripts --workspaces=false
+          set -o pipefail
+          npm ci --ignore-scripts 2>&1 | tee /tmp/npm-install.log
+          if grep -Eiq 'npm[[:space:]]+(warn|error)|deprecated' /tmp/npm-install.log; then
+            echo 'npm install emitted a warning, error, or deprecation notice'
+            exit 1
+          fi
           npm ls --all
           npm audit --audit-level=low
-      - name: Install PostgreSQL test fixture
-        run: |
-          cd "$PACKAGE_DIR"
-          npm install --no-save --package-lock=false --ignore-scripts pg@8.23.0
-      - name: Run upstream and Stackline contracts
-        run: cd "$PACKAGE_DIR" && npm test
+      - name: Run all tests
+        run: npm test
       - name: Verify package metadata
-        run: cd "$PACKAGE_DIR" && npm run check:package
+        run: npm run check:package
       - name: Verify packed consumers
-        run: cd "$PACKAGE_DIR" && npm run test:smoke
+        run: npm run test:smoke
       - name: Inspect packed inventory
-        run: cd "$PACKAGE_DIR" && npm run pack:check
+        run: npm run pack:check
       - name: Lint the exact tarball
-        if: matrix.node == '24'
+        if: matrix.node == '26' && matrix.postgres == '18'
+        shell: bash
         run: |
-          cd "$PACKAGE_DIR"
           archive=$(npm pack --silent --ignore-scripts)
           npx --yes publint@0.3.24 "$archive" --strict
 

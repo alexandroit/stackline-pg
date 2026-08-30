@@ -1,7 +1,16 @@
-
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "monthly"
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      postgres-runtime:
+        dependency-type: production
+      test-tooling:
+        dependency-type: development
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

@@ -3,7 +3,6 @@ build/
 .lock-wscript
 *.log
 node_modules/
-package-lock.json
 *.swp
 dist
 .DS_Store
@@ -11,3 +10,5 @@ dist
 .vscode/
 manually-test-on-heroku.js
 tsconfig.tsbuildinfo
+/release-candidate/
+/.release-candidate-staging-*/
