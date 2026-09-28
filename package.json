@@ -1,6 +1,6 @@
 {
   "name": "@stackline/pg",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Maintained, dependency-reviewed PostgreSQL client compatible with pg 8.23.0",
   "type": "commonjs",
   "main": "./lib",
@@ -49,7 +49,9 @@
     "node-postgres",
     "pg",
     "postgres",
-    "postgresql"
+    "postgresql",
+    "stackline",
+    "sql"
   ],
   "author": "Stackline Maintainers",
   "contributors": [
