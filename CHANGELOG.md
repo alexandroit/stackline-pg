@@ -2,6 +2,7 @@
 
 ## [1.0.1] - 2026-09-28
 
+- Explain TLS defaults, certificate-validation opt-outs, and migration from legacy MD5 to server-side SCRAM authentication.
 - Organize package documentation, preserve API and migration examples, and add Stackline community links.
 - Improve package discovery keywords with precise domain terms and `stackline`.
 - Pin GitHub Actions release tooling and require an explicit missing-version response before publication.

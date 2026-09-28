@@ -111,7 +111,11 @@ try {
 
 ## Security
 
-Review inputs and the package-specific compatibility limits before processing untrusted data. Report suspected vulnerabilities as described in the [security policy](https://github.com/alexandroit/stackline-pg/blob/main/SECURITY.md).
+TLS is disabled unless configured. For remote databases, enable verified TLS
+with `ssl: true` or a trusted CA in the `ssl` options. The explicit `no-verify`
+options disable certificate validation. Prefer server-side SCRAM-SHA-256
+authentication over legacy MD5. See the [connection security guidance](https://github.com/alexandroit/stackline-pg/blob/main/SECURITY.md#connection-security)
+for configuration details and vulnerability reporting.
 
 ## Local Development
 
