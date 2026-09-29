@@ -1,0 +1,27 @@
+{
+  "repository": "alexandroit/stackline-pg",
+  "packages": [
+    {
+      "name": "@stackline/pg",
+      "path": "README.md",
+      "version": "1.0.3",
+      "baselineVersion": "1.0.2",
+      "keywords": [
+        "stackline",
+        "npm-package",
+        "pg",
+        "nodejs",
+        "database",
+        "node-postgres",
+        "postgres",
+        "postgresql",
+        "sql"
+      ],
+      "homepage": "https://alexandro.net/docs/vanilla/pg/",
+      "baselineTarball": "https://registry.npmjs.org/@stackline/pg/-/pg-1.0.2.tgz",
+      "baselineIntegrity": "sha512-JTAVjkpptyE1unmVKHm976g7oNISyQqXLgwvhs4H1J7ZW+x5fhFVrEYlOTv6E7hsZ9hBH/C48G0KclgCdmVlRQ==",
+      "expectedSha512": "b37d34aa3a9c9bc2d9dfb5657ddaffab9f5e779d3f17ad42a30accf239facc22df5a8b6dd7ea2be645739ea69dc0f64fdb0f97c07d55e357c620e671c6d9ccb6",
+      "tag": "docs-stackline-pg-v1.0.3"
+    }
+  ]
+}
