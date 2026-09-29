@@ -1,6 +1,6 @@
 {
   "name": "@stackline/pg",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Maintained, dependency-reviewed PostgreSQL client compatible with pg 8.23.0",
   "type": "commonjs",
   "main": "./lib",
@@ -46,12 +46,14 @@
     "url": "git+https://github.com/alexandroit/stackline-pg.git"
   },
   "keywords": [
+    "stackline",
+    "npm-package",
+    "pg",
+    "nodejs",
     "database",
     "node-postgres",
-    "pg",
     "postgres",
     "postgresql",
-    "stackline",
     "sql"
   ],
   "author": "Stackline Maintainers",
