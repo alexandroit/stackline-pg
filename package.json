@@ -36,9 +36,10 @@
     "test:smoke": "node scripts/smoke-install.mjs",
     "check:package": "node scripts/check-package.mjs",
     "pack:check": "npm pack --dry-run --ignore-scripts",
-    "test": "npm run test:unit && npm run test:integration && npm run test:contract",
+    "test": "npm run test:unit && npm run test:integration && npm run test:contract && npm run test:security-contract",
     "verify": "npm test && npm run check:package && npm run test:smoke && npm run pack:check",
-    "artifact:prepare": "node scripts/create-artifact.mjs"
+    "artifact:prepare": "node scripts/create-artifact.mjs",
+    "test:security-contract": "node scripts/security-contract-tests.mjs"
   },
   "repository": {
     "type": "git",
@@ -79,7 +80,8 @@
     "README.md",
     "SECURITY.md",
     "THIRD_PARTY_LICENSES.md",
-    "DEPENDENCY_UPDATES.md"
+    "DEPENDENCY_UPDATES.md",
+    "CODEQL_REVIEW.md"
   ],
   "publishConfig": {
     "access": "public"
