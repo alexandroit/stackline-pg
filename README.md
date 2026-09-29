@@ -11,7 +11,7 @@
 **[Issues](https://github.com/alexandroit/stackline-pg/issues)** |
 **[Repository](https://github.com/alexandroit/stackline-pg)**
 
-**Package version:** `1.0.1`
+**Package version:** `1.0.2`
 
 ## Why this package?
 
@@ -28,7 +28,7 @@ not affiliated with or endorsed by its maintainers.
 
 | Item | Value |
 | --- | --- |
-| Package | `@stackline/pg@1.0.1` |
+| Package | `@stackline/pg@1.0.2` |
 | Node.js runtime | `>=16` |
 | CommonJS / primary entry | `./lib` |
 
@@ -173,3 +173,5 @@ Report reproducible package issues in the [issue tracker](https://github.com/ale
 MIT. The original copyright and license are preserved in [LICENSE](https://github.com/alexandroit/stackline-pg/blob/main/LICENSE),
 with attribution in [NOTICE](https://github.com/alexandroit/stackline-pg/blob/main/NOTICE) and dependency notices in
 [THIRD_PARTY_LICENSES.md](https://github.com/alexandroit/stackline-pg/blob/main/THIRD_PARTY_LICENSES.md).
+
+Dependency maintenance for this release is documented in [DEPENDENCY_UPDATES.md](DEPENDENCY_UPDATES.md).

@@ -92,7 +92,7 @@ assert.equal(Pool, pg.Pool)
     'utf8'
   ))
   assert.equal(installedManifest.name, '@stackline/pg')
-  assert.equal(installedManifest.version, '1.0.1')
+  assert.equal(installedManifest.version, '1.0.2')
 }
 
 try {

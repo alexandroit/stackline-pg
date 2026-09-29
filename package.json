@@ -1,6 +1,6 @@
 {
   "name": "@stackline/pg",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Maintained, dependency-reviewed PostgreSQL client compatible with pg 8.23.0",
   "type": "commonjs",
   "main": "./lib",
@@ -27,7 +27,7 @@
     "pg-cloudflare": "1.4.0"
   },
   "devDependencies": {
-    "pg-copy-streams": "7.0.0"
+    "pg-copy-streams": "npm:@stackline/pg-copy-streams@1.0.0"
   },
   "scripts": {
     "test:unit": "node scripts/run-tests.mjs unit",
@@ -78,7 +78,8 @@
     "NOTICE",
     "README.md",
     "SECURITY.md",
-    "THIRD_PARTY_LICENSES.md"
+    "THIRD_PARTY_LICENSES.md",
+    "DEPENDENCY_UPDATES.md"
   ],
   "publishConfig": {
     "access": "public"

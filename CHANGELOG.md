@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2 - 2026-09-28
+
+- Pin verified Stackline maintenance forks under the existing dependency import names; see `DEPENDENCY_UPDATES.md`.
+- Preserve the package API, supported runtimes, upstream comparison tests, and original licenses.
+
 ## [1.0.1] - 2026-09-28
 
 - Explain TLS defaults, certificate-validation opt-outs, and migration from legacy MD5 to server-side SCRAM authentication.

@@ -15,7 +15,7 @@ const expectedDependencies = {
 }
 
 assert.equal(manifest.name, '@stackline/pg')
-assert.equal(manifest.version, '1.0.1')
+assert.equal(manifest.version, '1.0.2')
 assert.equal(manifest.main, './lib')
 assert.deepEqual(manifest.engines, { node: '>=16' })
 assert.deepEqual(manifest.dependencies, expectedDependencies)
