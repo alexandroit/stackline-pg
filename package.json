@@ -1,6 +1,6 @@
 {
   "name": "@stackline/pg",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Maintained, dependency-reviewed PostgreSQL client compatible with pg 8.23.0",
   "type": "commonjs",
   "main": "./lib",
